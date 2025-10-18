@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOMENTO</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+    <link rel="stylesheet" href="styles/base.css">
+    <link rel="stylesheet" href="styles/theme.css">
+    <link rel="stylesheet" href="styles/layout.css">
+    <link rel="stylesheet" href="styles/header.css">
+    <link rel="stylesheet" href="styles/entry.css">
+    <link rel="stylesheet" href="styles/stats.css">
+    <link rel="stylesheet" href="styles/calendar.css">
+    <link rel="stylesheet" href="styles/modal.css">
+    <link rel="stylesheet" href="styles/search.css">
+    <link rel="stylesheet" href="styles/responsive.css">
+    <link rel="stylesheet" href="styles/v3.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-top">
+                <h1>📝 MOMENTO</h1>
+                <div class="header-controls">
+                    <button id="settingsBtn" class="settings-btn" title="Settings">⚙️</button>
+                </div>
+            </div>
+            <p class="subtitle">Capture your day in one line</p>
+        </header>
+
+        <main>
+            <!-- Today's Entry Section -->
+            <section class="today-entry">
+                <h2>Today's Reflection</h2>
+                <div class="entry-form">
+                                    <div class="input-container">
+                    <div class="input-wrapper">
+                        <textarea 
+                            id="journalEntry" 
+                            placeholder="Write your one line reflection here..."
+                            maxlength="200"
+                        ></textarea>
+                        <button id="voiceBtn" class="voice-btn" title="Voice input">
+                            <span class="voice-icon">🎤</span>
+                        </button>
+                    </div>
+                    <div class="voice-status" id="voiceStatus" style="display: none;">
+                        <span class="voice-indicator">🎤</span>
+                        <span>Listening...</span>
+                    </div>
+                    <div class="word-counter">
+                        <span id="charCount">0</span>/200 characters | <span id="wordCount">0</span> words
+                    </div>
+                </div>
+                    
+                    <div class="mood-selector">
+                        <label>How are you feeling today?</label>
+                        <div class="mood-options">
+                            <button class="mood-btn" data-mood="happy">🙂</button>
+                            <button class="mood-btn" data-mood="neutral">😐</button>
+                            <button class="mood-btn" data-mood="sad">😔</button>
+                            <button class="mood-btn custom-mood" id="customMoodBtn" title="Custom mood">🎨</button>
+                        </div>
+                    </div>
+
+                    <div class="tags-container">
+                        <label>Tags (optional)</label>
+                        <div class="tags-input">
+                            <input type="text" id="tagInput" placeholder="Add tags like #gratitude #goal" maxlength="50">
+                            <button id="addTagBtn" class="add-tag-btn" title="Generate random tag">🎲</button>
+                            <div id="tagSuggestions" class="tag-suggestions"></div>
+                        </div>
+                        <div id="tagsList" class="tags-list">
+                            <!-- Tags will be added here -->
+                        </div>
+                    </div>
+                    
+                    <button id="saveEntry" class="save-btn">Save Today's Entry</button>
+                </div>
+            </section>
+
+            <!-- Stats Section -->
+            <section class="stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="streakCount">0</div>
+                    <div class="stat-label">🔥 Day Streak</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalEntries">0</div>
+                    <div class="stat-label">Total Entries</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="currentMood">-</div>
+                    <div class="stat-label">Today's Mood</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="avgMood">-</div>
+                    <div class="stat-label">Avg Mood</div>
+                </div>
+            </section>
+
+            <!-- Wisdom Section -->
+            <section id="wisdomSection" class="wisdom-section" style="display: none;">
+                <div class="wisdom-card">
+                    <div class="wisdom-icon">🧘</div>
+                    <blockquote class="wisdom-quote" id="wisdomQuote">
+                        <!-- Wisdom quote will be displayed here -->
+                    </blockquote>
+                    <button id="refreshQuote" class="refresh-quote-btn">🔄 New Quote</button>
+                </div>
+            </section>
+
+            <!-- AI Summary Section -->
+            <section id="aiSummarySection" class="ai-summary-section" style="display: none;">
+                <div class="ai-summary-card">
+                    <div class="ai-summary-header">
+                        <div class="ai-icon">🤖</div>
+                        <div class="ai-title">AI Journal Summary</div>
+                        <button id="generateSummary" class="generate-summary-btn">Generate Summary</button>
+                    </div>
+                    <div class="ai-summary-content" id="aiSummaryContent">
+                        <div class="ai-placeholder">
+                            Click "Generate Summary" to get an AI-powered analysis of your recent entries.
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Advanced Search & Filter Section -->
+            <section class="search-filter">
+                <div class="search-header">
+                    <h3>🔍 Search & Filter</h3>
+                    <button id="toggleAdvancedSearch" class="toggle-search-btn" title="Toggle Advanced Search">
+                        <span class="toggle-icon">▼</span>
+                    </button>
+                </div>
+                
+                <!-- Basic Search Bar -->
+                <div class="search-container">
+                    <div class="search-input-group">
+                        <input type="text" id="searchInput" placeholder="🔍 Basic Search: Type to search entries, tags, or dates..." class="search-input">
+                        <input type="date" id="searchDate" class="date-input">
+                        <button id="voiceSearchBtn" class="voice-search-btn" title="Voice Search">🎤</button>
+                        <button id="clearSearchBtn" class="clear-search-btn" title="Clear Search">✕</button>
+                    </div>
+                    
+                    <!-- Search Suggestions -->
+                    <div id="searchSuggestions" class="search-suggestions" style="display: none;">
+                        <!-- Suggestions will be populated here -->
+                    </div>
+                </div>
+
+                <!-- Search Mode Info -->
+                <div class="search-mode-info">
+                    <p class="search-mode-text">💡 <strong>Basic Search:</strong> Type in the search box above for instant results. <strong>Advanced Search:</strong> Click "Advanced Search" below for filters, date ranges, and more options.</p>
+                </div>
+
+                <!-- Advanced Search Panel -->
+                <div id="advancedSearchPanel" class="advanced-search-panel" style="display: none;">
+                    <div class="advanced-search-header">
+                        <h4>🔧 Advanced Search Options</h4>
+                        <p>Use these filters to find specific entries with precise criteria</p>
+                    </div>
+                    
+                    <div class="advanced-search-grid">
+                        <!-- Quick Filters -->
+                        <div class="filter-group">
+                            <label>Quick Filters</label>
+                            <div class="quick-filters">
+                                <button class="quick-filter-btn" data-filter="sentiment:positive">😊 Positive</button>
+                                <button class="quick-filter-btn" data-filter="sentiment:neutral">😐 Neutral</button>
+                                <button class="quick-filter-btn" data-filter="sentiment:negative">😔 Negative</button>
+                                <button class="quick-filter-btn" data-filter="length:short">📝 Short</button>
+                                <button class="quick-filter-btn" data-filter="length:long">📄 Long</button>
+                                <button class="quick-filter-btn" data-filter="type:voice">🎤 Voice</button>
+                                <button class="quick-filter-btn" data-filter="type:ai">🤖 AI Summary</button>
+                            </div>
+                        </div>
+
+                        <!-- Mood & Sentiment -->
+                        <div class="filter-group">
+                            <label>Mood & Sentiment</label>
+                            <select id="moodFilter" class="filter-select">
+                                <option value="">All moods</option>
+                                <option value="happy">🙂 Happy</option>
+                                <option value="neutral">😐 Neutral</option>
+                                <option value="sad">😔 Sad</option>
+                            </select>
+                            <select id="sentimentFilter" class="filter-select">
+                                <option value="">All sentiments</option>
+                                <option value="positive">😊 Positive</option>
+                                <option value="neutral">😐 Neutral</option>
+                                <option value="negative">😔 Negative</option>
+                            </select>
+                        </div>
+
+                        <!-- Tags & Categories -->
+                        <div class="filter-group">
+                            <label>Tags & Categories</label>
+                            <select id="tagFilter" class="filter-select">
+                                <option value="">All tags</option>
+                                <!-- Tags will be populated dynamically -->
+                            </select>
+                            <div class="tag-combination">
+                                <input type="text" id="tagCombinationInput" placeholder="Combine tags (e.g., work+stress)" class="tag-input">
+                                <button id="addTagCombination" class="add-tag-btn">+</button>
+                            </div>
+                        </div>
+
+                        <!-- Date Range -->
+                        <div class="filter-group">
+                            <label>Date Range</label>
+                            <div class="date-range">
+                                <input type="date" id="startDate" class="date-input">
+                                <span>to</span>
+                                <input type="date" id="endDate" class="date-input">
+                            </div>
+                            <div class="date-presets">
+                                <button class="date-preset-btn" data-preset="today">Today</button>
+                                <button class="date-preset-btn" data-preset="week">This Week</button>
+                                <button class="date-preset-btn" data-preset="month">This Month</button>
+                                <button class="date-preset-btn" data-preset="year">This Year</button>
+                            </div>
+                        </div>
+
+                        <!-- Entry Properties -->
+                        <div class="filter-group">
+                            <label>Entry Properties</label>
+                            <select id="lengthFilter" class="filter-select">
+                                <option value="">Any length</option>
+                                <option value="short">Short (< 50 chars)</option>
+                                <option value="medium">Medium (50-100 chars)</option>
+                                <option value="long">Long (> 100 chars)</option>
+                            </select>
+                            <select id="typeFilter" class="filter-select">
+                                <option value="">All types</option>
+                                <option value="text">Text only</option>
+                                <option value="voice">Voice input</option>
+                                <option value="ai">AI summarized</option>
+                            </select>
+                        </div>
+
+                        <!-- Advanced Options -->
+                        <div class="filter-group">
+                            <label>Advanced Options</label>
+                            <div class="advanced-options">
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="fuzzySearch" checked>
+                                    Fuzzy search
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="highlightMatches" checked>
+                                    Highlight matches
+                                </label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="excludeFilters">
+                                    Use exclude filters
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Search Actions -->
+                    <div class="search-actions">
+                        <button id="applySearch" class="apply-search-btn">🔍 Apply Search</button>
+                        <button id="saveSearch" class="save-search-btn">💾 Save Search</button>
+                        <button id="clearAllFilters" class="clear-filters-btn">🗑️ Clear All</button>
+                    </div>
+
+                    <!-- Saved Searches -->
+                    <div class="saved-searches">
+                        <label>Saved Searches</label>
+                        <div id="savedSearchesList" class="saved-searches-list">
+                            <!-- Saved searches will be populated here -->
+                        </div>
+                    </div>
+
+                    <!-- Search History -->
+                    <div class="search-history">
+                        <label>Recent Searches</label>
+                        <div id="searchHistoryList" class="search-history-list">
+                            <!-- Search history will be populated here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Search Results Info -->
+                <div id="searchResultsInfo" class="search-results-info" style="display: none;">
+                    <div class="results-stats">
+                        <span id="resultsCount">0</span> results found
+                        <span id="searchTime"></span>
+                    </div>
+                    <div class="results-actions">
+                        <button id="pinResults" class="pin-results-btn">📌 Pin Results</button>
+                        <button id="exportResults" class="export-results-btn">📥 Export</button>
+                        <button id="timelineView" class="timeline-view-btn">📊 Timeline</button>
+                        <button id="printResults" class="print-results-btn">🖨️ Print</button>
+                    </div>
+                </div>
+
+                <!-- Dedicated Search Results Section -->
+                <div id="searchResultsSection" class="search-results-section" style="display: none;">
+                    <div class="search-results-header">
+                        <h3>🔍 Search Results</h3>
+                        <button id="clearSearchResults" class="clear-search-results-btn" title="Clear Search Results">✕</button>
+                    </div>
+                    <div id="searchResultsList" class="search-results-list">
+                        <!-- Search results will be displayed here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Calendar View -->
+            <section class="calendar-view">
+                <h2>Calendar View</h2>
+                <div class="calendar-controls">
+                    <button id="prevMonth" class="calendar-btn">‹</button>
+                    <h3 id="currentMonth">January 2024</h3>
+                    <button id="nextMonth" class="calendar-btn">›</button>
+                </div>
+                <div id="calendar" class="calendar-grid">
+                    <!-- Calendar will be generated here -->
+                </div>
+            </section>
+
+            <!-- Recent Entries Section -->
+            <section class="recent-entries">
+                <h2>Recent Reflections</h2>
+                <div id="entriesList" class="entries-list">
+                    <!-- Entries will be populated here -->
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>Built for simplicity and emotional awareness</p>
+        </footer>
+    </div>
+
+    <!-- Custom Mood Modal -->
+    <div id="moodModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Choose Custom Mood</h3>
+                <button class="close-btn" id="closeMoodModal">&times;</button>
+            </div>
+            <div class="mood-grid">
+                <button class="custom-mood-btn" data-emoji="😊">😊</button>
+                <button class="custom-mood-btn" data-emoji="😄">😄</button>
+                <button class="custom-mood-btn" data-emoji="🥰">🥰</button>
+                <button class="custom-mood-btn" data-emoji="😌">😌</button>
+                <button class="custom-mood-btn" data-emoji="😴">😴</button>
+                <button class="custom-mood-btn" data-emoji="😕">😕</button>
+                <button class="custom-mood-btn" data-emoji="😢">😢</button>
+                <button class="custom-mood-btn" data-emoji="😡">😡</button>
+                <button class="custom-mood-btn" data-emoji="🤔">🤔</button>
+                <button class="custom-mood-btn" data-emoji="😎">😎</button>
+                <button class="custom-mood-btn" data-emoji="🤗">🤗</button>
+                <button class="custom-mood-btn" data-emoji="😇">😇</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Backup Modal -->
+    <div id="backupModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Backup & Restore</h3>
+                <button class="close-btn" id="closeBackupModal">&times;</button>
+            </div>
+            <div class="backup-options">
+                <div class="backup-section">
+                    <h4>Export Data</h4>
+                    <p>Download your journal entries as a JSON file</p>
+                    <button id="exportBtn" class="backup-btn-primary">📥 Export Journal</button>
+                </div>
+                <div class="backup-section">
+                    <h4>Import Data</h4>
+                    <p>Restore your journal from a backup file</p>
+                    <input type="file" id="importFile" accept=".json" style="display: none;">
+                    <button id="importBtn" class="backup-btn-primary">📤 Import Journal</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Entry Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Edit Entry</h3>
+                <button class="close-btn" id="closeEditModal">&times;</button>
+            </div>
+            <div class="edit-form">
+                <textarea id="editText" placeholder="Edit your reflection..." maxlength="200"></textarea>
+                <div class="edit-mood-selector">
+                    <label>Mood:</label>
+                    <div class="mood-options">
+                        <button class="mood-btn edit-mood" data-mood="happy">🙂</button>
+                        <button class="mood-btn edit-mood" data-mood="neutral">😐</button>
+                        <button class="mood-btn edit-mood" data-mood="sad">😔</button>
+                    </div>
+                </div>
+                <div class="edit-tags">
+                    <label>Tags:</label>
+                    <input type="text" id="editTags" placeholder="Edit tags...">
+                </div>
+                <div class="edit-actions">
+                    <button id="saveEditBtn" class="save-btn">Save Changes</button>
+                    <button id="deleteEntryBtn" class="delete-btn">Delete Entry</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Onboarding Tutorial -->
+    <div id="onboarding" class="onboarding-overlay" style="display: none;">
+        <div class="onboarding-content">
+            <div class="onboarding-step" data-step="1">
+                <h3>Welcome to MOMENTO! 📝</h3>
+                <p>Let's take a quick tour to help you get started.</p>
+                <button class="onboarding-btn" id="onboardingNext1">Next</button>
+            </div>
+            <div class="onboarding-step" data-step="2" style="display: none;">
+                <h3>Write Your Reflection ✍️</h3>
+                <p>Type your daily reflection in the text area. Keep it to one line (max 200 characters).</p>
+                <button class="onboarding-btn" id="onboardingNext2">Next</button>
+            </div>
+            <div class="onboarding-step" data-step="3" style="display: none;">
+                <h3>Track Your Mood 😊</h3>
+                <p>Select your mood for the day. You can also choose custom emojis!</p>
+                <button class="onboarding-btn" id="onboardingNext3">Next</button>
+            </div>
+            <div class="onboarding-step" data-step="4" style="display: none;">
+                <h3>Add Tags 🏷️</h3>
+                <p>Add tags like #gratitude or #goal to organize your thoughts.</p>
+                <button class="onboarding-btn" id="onboardingFinish">Get Started!</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content settings-content">
+            <div class="modal-header">
+                <h3>⚙️ Settings</h3>
+                <button class="close-btn" id="closeSettingsModal">&times;</button>
+            </div>
+            <div class="settings-content">
+                <div class="settings-section">
+                    <h3 class="section-title">🎤 Voice & Input</h3>
+                    <div class="setting-group">
+                        <div class="setting-header">
+                            <div class="setting-info">
+                                <h4>Voice-to-Text</h4>
+                                <p>Enable voice-to-text for journal entries</p>
+                            </div>
+                            <label class="setting-toggle">
+                                <input type="checkbox" id="voiceEnabled">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3 class="section-title">🧘 Wisdom & Inspiration</h3>
+                    <div class="setting-group">
+                        <div class="setting-header">
+                            <div class="setting-info">
+                                <h4>Daily Wisdom Quotes</h4>
+                                <p>Show inspirational quotes on the home screen</p>
+                            </div>
+                            <label class="setting-toggle">
+                                <input type="checkbox" id="wisdomEnabled">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <button id="customizeQuotes" class="customize-btn">
+                            <span>✏️</span> Customize Quotes
+                        </button>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3 class="section-title">🤖 AI Features</h3>
+                    <div class="setting-group">
+                        <div class="setting-header">
+                            <div class="setting-info">
+                                <h4>AI Journal Summary</h4>
+                                <p>Generate AI-powered summaries of your entries</p>
+                            </div>
+                            <label class="setting-toggle">
+                                <input type="checkbox" id="aiEnabled">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                        <button id="configureAI" class="configure-btn">
+                            <span>🔧</span> Configure AI
+                        </button>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3 class="section-title">🎨 Appearance</h3>
+                    <div class="setting-group">
+                        <div class="setting-header">
+                            <div class="setting-info">
+                                <h4>Dark Mode</h4>
+                                <p>Toggle between light and dark themes</p>
+                            </div>
+                            <label class="setting-toggle">
+                                <input type="checkbox" id="themeToggle">
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-section">
+                    <h3 class="section-title">📊 Data & Backup</h3>
+                    <div class="setting-group">
+                        <div class="setting-header">
+                            <div class="setting-info">
+                                <h4>Backup & Restore</h4>
+                                <p>Export or import your journal data</p>
+                            </div>
+                            <button id="backupFromSettings" class="backup-btn-secondary">
+                                <span>💾</span> Backup Data
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="settings-footer">
+                    <!-- Version info removed -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Configuration Modal -->
+    <div id="aiConfigModal" class="modal">
+        <div class="modal-content ai-config-content">
+            <div class="modal-header">
+                <h3>🤖 AI Configuration</h3>
+                <button class="close-btn" id="closeAIConfigModal">&times;</button>
+            </div>
+            <div class="ai-config-content">
+                <div class="ai-provider-select">
+                    <label for="aiProvider">AI Provider:</label>
+                    <select id="aiProvider">
+                        <option value="openai">OpenAI (GPT-4)</option>
+                        <option value="groq">Groq (Llama 3.1)</option>
+                        <option value="xai">xAI (Grok)</option>
+                        <option value="anthropic">Anthropic (Claude)</option>
+                        <option value="google">Google (Gemini)</option>
+                        <option value="mistral">Mistral AI</option>
+                        <option value="cohere">Cohere</option>
+                        <option value="aws_bedrock">AWS Bedrock</option>
+                        <option value="azure_openai">Azure OpenAI</option>
+                        <option value="curl">Custom cURL</option>
+                    </select>
+                </div>
+                
+                <div class="ai-model-select">
+                    <label for="aiModel">Model:</label>
+                    <select id="aiModel">
+                        <option value="gpt-4">GPT-4</option>
+                        <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+                        <option value="llama-3.1-8b">Llama 3.1 8B</option>
+                        <option value="llama-3.1-70b">Llama 3.1 70B</option>
+                        <option value="grok-beta">Grok Beta</option>
+                        <option value="claude-3-sonnet">Claude 3 Sonnet</option>
+                        <option value="claude-3-haiku">Claude 3 Haiku</option>
+                    </select>
+                </div>
+                
+                <div class="api-key-input">
+                    <label for="apiKey">API Key:</label>
+                    <div class="api-key-wrapper">
+                        <input type="password" id="apiKey" placeholder="Enter your API key">
+                        <button id="toggleApiKey" class="toggle-api-key-btn" title="Show/Hide API Key">👁️</button>
+                    </div>
+                    <small>Your API key is stored locally and never shared</small>
+                </div>
+                
+                <div class="curl-input" id="curlInput" style="display: none;">
+                    <label for="curlCommand">cURL Command:</label>
+                    <textarea id="curlCommand" placeholder="Enter your complete cURL command (e.g., curl -X POST https://api.groq.com/openai/v1/chat/completions -H 'Authorization: Bearer YOUR_API_KEY' -H 'Content-Type: application/json' -d '{\"model\": \"llama-3.3-70b-versatile\", \"messages\": [{\"role\": \"user\", \"content\": \"Hello\"}]}')" rows="6"></textarea>
+                    <small>Paste your complete cURL command here. The system will automatically replace the content with your journal entries.</small>
+                </div>
+                
+                <div class="ai-options">
+                    <label>
+                        <input type="checkbox" id="autoSummary"> Auto-generate weekly summaries
+                    </label>
+                </div>
+                
+                <div class="ai-actions">
+                    <button id="saveAIConfig" class="save-btn">Save Configuration</button>
+                    <button id="testAIConnection" class="test-btn">Test Connection</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Quotes Modal -->
+    <div id="customQuotesModal" class="modal">
+        <div class="modal-content custom-quotes-content">
+            <div class="modal-header">
+                <h3>🧘 Custom Wisdom Quotes</h3>
+                <button class="close-btn" id="closeCustomQuotesModal">&times;</button>
+            </div>
+            <div class="custom-quotes-content">
+                <div class="quotes-list" id="quotesList">
+                    <!-- Quotes will be populated here -->
+                </div>
+                
+                <div class="add-quote">
+                    <input type="text" id="newQuote" placeholder="Add your own quote..." maxlength="200">
+                    <button id="addQuoteBtn" class="add-quote-btn">Add Quote</button>
+                    <button id="generateAIQuote" class="generate-ai-quote-btn">🤖 Generate AI Quote</button>
+                </div>
+                
+                <div class="quotes-actions">
+                    <button id="resetQuotes" class="reset-btn">Reset to Default</button>
+                    <button id="saveQuotes" class="save-btn">Save Changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+
+        <button id="backToTopBtn" title="Go to top">↑</button>
+
+
+        <div id="devPopup" class="popup-overlay">
+            <div class="popup-card">
+              <h2>⚠ Site Under Development</h2>
+              <p>
+                This website is currently under development.  
+                You may see bugs or glitches.  
+                If you still want to continue, click below.
+              </p>
+              <button id="closePopup">Continue</button>
+            </div>
+          </div>
+
+          
+    <script src="scripts/config.js"></script>
+
+    <script src="scripts/api.js"></script>
+
+    <script src="scripts/ui.js"></script>
+
+    <script src="scripts/events.js"></script>
+
+    <script src="scripts/main.js" type="module"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+          if (!localStorage.getItem("hasSeenPopup")) {
+            document.getElementById("devPopup").style.display = "flex";
+          }
+      
+          document.getElementById("closePopup").addEventListener("click", function () {
+            document.getElementById("devPopup").style.display = "none";
+            localStorage.setItem("hasSeenPopup", "true");
+          });
+        });
+      </script>
+      
+    </body>
+
+    </html> 
+
+     

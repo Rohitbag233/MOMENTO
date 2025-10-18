@@ -1,0 +1,236 @@
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+    
+    header h1 {
+        font-size: 1.8rem;
+    }
+    
+    .header-controls {
+        gap: 0.3rem;
+    }
+    
+    .theme-btn, .backup-btn, .settings-btn {
+        padding: 0.4rem;
+        font-size: 1rem;
+    }
+    
+    section {
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.5rem;
+    }
+    
+    .stat-card {
+        padding: 1rem 0.5rem;
+    }
+    
+    .stat-number {
+        font-size: 1.5rem;
+    }
+    
+    .input-wrapper {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .voice-btn {
+        align-self: flex-end;
+        margin-top: 0;
+        padding: 0.5rem;
+    }
+    
+    .mood-options {
+        justify-content: center;
+        gap: 0.3rem;
+        flex-wrap: wrap;
+    }
+    
+    .mood-btn {
+        padding: 0.5rem;
+        font-size: 1.2rem;
+    }
+    
+    .tags-input {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .add-tag-btn {
+        align-self: flex-end;
+        padding: 0.5rem;
+    }
+    
+    .search-container {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .search-input, .filter-select {
+        width: 100%;
+    }
+    
+    .calendar-controls {
+        gap: 0.5rem;
+    }
+    
+    .calendar-btn {
+        padding: 0.5rem;
+        font-size: 1.2rem;
+    }
+    
+    .calendar-grid {
+        gap: 0.25rem;
+    }
+    
+    .calendar-day {
+        padding: 0.3rem;
+        font-size: 0.8rem;
+    }
+    
+    .entry-item {
+        padding: 1rem;
+    }
+    
+    .entry-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .edit-btn, .delete-btn {
+        width: 100%;
+        padding: 0.5rem;
+    }
+    
+    .modal-content {
+        width: 95%;
+        margin: 10% auto;
+        max-height: calc(100vh - 2rem);
+        overflow-y: auto;
+    }
+    
+    .mood-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.5rem;
+    }
+    
+    .custom-mood-btn {
+        padding: 0.8rem;
+        font-size: 1.5rem;
+    }
+    
+    .wisdom-card {
+        padding: 1rem;
+    }
+    
+    .ai-summary-header {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: flex-start;
+    }
+    
+    .generate-summary-btn {
+        width: 100%;
+    }
+    
+    .setting-group {
+        padding: 1rem;
+    }
+    
+    .customize-btn, .configure-btn {
+        width: 100%;
+        margin-top: 0.5rem;
+    }
+    
+    .ai-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .quotes-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .add-quote {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .add-quote-btn {
+        width: 100%;
+    }
+
+    .generate-ai-quote-btn {
+        width: 100%;
+    }
+
+    .advanced-search-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .search-actions {
+        flex-direction: column;
+    }
+    
+    .search-results-info {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .results-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .quick-filters {
+        justify-content: center;
+    }
+    
+    .date-range {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .date-presets {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0.5rem;
+    }
+    
+    header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .subtitle {
+        font-size: 0.9rem;
+    }
+    
+    .stats {
+        grid-template-columns: 1fr;
+    }
+    
+    .stat-card {
+        padding: 0.8rem;
+    }
+    
+    .entry-form {
+        padding: 1rem;
+    }
+    
+    .modal-content {
+        margin: 0.5rem;
+        width: calc(100vw - 1rem);
+    }
+}
